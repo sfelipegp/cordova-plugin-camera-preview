@@ -722,6 +722,9 @@
 
         CGImageRef finalImage = [self.cameraRenderController.ciContext createCGImage:finalCImage fromRect:finalCImage.extent];
         UIImage *resultImage = [UIImage imageWithCGImage:finalImage];
+        
+        CGFloat picWidth = resultImage.size.width;
+        CGFloat picHeight = resultImage.size.height;
 
         double radians = [self radiansFromUIImageOrientation:resultImage.imageOrientation];
         CGImageRef resultFinalImage = [self CGImageRotated:finalImage withRadians:radians];
@@ -733,6 +736,8 @@
         CGImageRelease(resultFinalImage); // release CGImageRef to remove memory leaks
 
         [params addObject:base64Image];
+        [params addObject:picWidth];
+        [params addObject:picHeight];
 
         CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:params];
         [pluginResult setKeepCallbackAsBool:true];
