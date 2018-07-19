@@ -50,7 +50,8 @@ import java.util.Arrays;
 public class CameraActivity extends Fragment {
 
   public interface CameraPreviewListener {
-    void onPictureTaken(String originalPicture);
+    //void onPictureTaken(String originalPicture);
+    void onPictureTaken(String originalPicture, int width, int height);
     void onPictureTakenError(String message);
     void onFocusSet(int pointX, int pointY);
     void onFocusSetError(String message);
@@ -86,6 +87,9 @@ public class CameraActivity extends Fragment {
   public int height;
   public int x;
   public int y;
+
+  public int picWidth;
+  public int picHeight;
 
   public void setEventListener(CameraPreviewListener listener){
     eventListener = listener;
@@ -127,9 +131,11 @@ public class CameraActivity extends Fragment {
       mainLayout.addView(mPreview);
       mainLayout.setEnabled(false);
 
-        if(toBack == false) {
+      this.setupTouchAndBackButton();
+
+       /*  if(toBack == false) {
             this.setupTouchAndBackButton();
-        }
+        } */
 
     }
   }
@@ -435,7 +441,7 @@ public class CameraActivity extends Fragment {
 
         String encodedImage = Base64.encodeToString(data, Base64.NO_WRAP);
 
-        eventListener.onPictureTaken(encodedImage);
+        eventListener.onPictureTaken(encodedImage, picWidth, picHeight);
         Log.d(TAG, "CameraPreview pictureTakenHandler called back");
       } catch (OutOfMemoryError e) {
         // most likely failed to allocate memory for rotateBitmap
@@ -521,6 +527,8 @@ public class CameraActivity extends Fragment {
       }
     }
     Log.d(TAG, "CameraPreview optimalPictureSize " + size.width + 'x' + size.height);
+    this.picWidth = size.width;
+    this.picHeight = size.height;
     return size;
   }
 
